@@ -28,14 +28,22 @@ def authenticate_google_drive():
 
 def upload_file_to_drive(service, file_path, file_name, mimetype='text/plain'):
     """Upload a file to a specific Google Drive folder."""
+    
+    FOLDER_ID = "1-y9bGuI0nmK22CPXg804U5nZU3gA--lV"  # Your folder ID
+
     file_metadata = {
         'name': file_name,
-        'parents': [FOLDER_ID]  # Upload into the correct folder
+        'parents': [FOLDER_ID]  # Upload into the specified folder
     }
 
     with io.FileIO(file_path, 'rb') as file_data:
         media = MediaIoBaseUpload(file_data, mimetype=mimetype)
-        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+
+        file = service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
 
     return file['id']
 
